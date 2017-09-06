@@ -17,9 +17,9 @@ class ProjectTests(unittest.TestCase):
 
     # tests
 
-    def test_main_page(self):
-        response = self.app.get('/', follow_redirects=True)
-        self.assertIn(b'Hello World', response.data)
+    def test_blog_page(self):
+        response = self.app.get('/blog/', follow_redirects=True)
+        self.assertIn(b'Hello Blog', response.data)
 
 if __name__ == "__main__":
     unittest.main()
