@@ -1,1 +1,13 @@
-env
+# Virtual Environment
+/env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac custom attributes file (Desktop Service Store)
+.DS_Store
+
+# Instance Folder - used for configuration parameters
+/instance
