@@ -11,3 +11,9 @@ __pycache__/
 
 # Instance Folder - used for configuration parameters
 /instance
+
+# sass files
+sass/
+gulpfile.js
+node_modules/
+package.json
