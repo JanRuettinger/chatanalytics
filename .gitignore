@@ -21,6 +21,7 @@ package.json
 /ssl_keys
 /ssh_keys
 *.txt
+!requirements.txt
 /tmp
 
 # plots
