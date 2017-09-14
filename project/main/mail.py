@@ -4,6 +4,7 @@ from email.header import decode_header, make_header
 import os
 import zipfile
 import time
+import sys
 from flask import current_app, render_template
 from ..models import Analysis
 from threading import Thread
@@ -14,7 +15,10 @@ from ..factory import mail
 # Connect to an IMAP server
 def connect(server, user, password):
     m = imaplib.IMAP4_SSL(server)
-    m.login(user, password)
+    try:
+        m.login(user, password)
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
     m.select('inbox')
     return m
 
