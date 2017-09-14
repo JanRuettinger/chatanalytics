@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Index{% endblock %}
+
+{% block page_content %}
+
+    <div class="index-container">
+      <h1>Whatsapp chat analyser</h1><hr>
+      <ol>
+        <li>Who sends longer texts?</li>
+        <li>Who answers quicker?</li>
+        <li>Which emojis does she/he use the most often?</li>
+        <li>Does she/he love me? (We use state of the art machine learning)</li>
+      </ol>
+
+      <div class="bt-analyse"><a href="{{url_for('main.instructions')}}" class="button">Anaylse your chat now</a>
+    </div>
+    </div>
+{% endblock %}
+
+

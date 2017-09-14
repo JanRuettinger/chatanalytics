@@ -17,3 +17,8 @@ sass/
 gulpfile.js
 node_modules/
 package.json
+
+/ssl_keys
+/ssh_keys
+*.txt
+/tmp

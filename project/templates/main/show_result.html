@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Result{% endblock %}
+
+{% block page_content %}
+
+    <div class="result-container">
+      <h1>Your Result</h1><hr>
+        <img src="{{url_for('static', filename=path + "/plot1.png")}}"> <hr>
+        <img src="{{url_for('static', filename=path + "/plot2.png")}}"> <hr>
+        <img src="{{url_for('static', filename=path + "/plot3.png")}}"> <hr>
+        <img src="{{url_for('static', filename=path + "/plot4.png")}}"> <hr>
+        <img src="{{url_for('static', filename=path + "/plot5.png")}}">
+    </div>
+{% endblock %}

@@ -8,3 +8,4 @@ blog_blueprint = Blueprint('blog', __name__)
 @blog_blueprint.route('/')
 def index():
     return "Hello Blog"
+

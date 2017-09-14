@@ -2524,6 +2524,20 @@ dt {
 dd {
   margin: 0; }
 
+li {
+  counter-increment: item;
+  margin-bottom: 5px; }
+
+li:before {
+  margin-right: 10px;
+  content: counter(item);
+  background: lightblue;
+  border-radius: 100%;
+  color: white;
+  width: 1.2em;
+  text-align: center;
+  display: inline-block; }
+
 table {
   border-collapse: collapse;
   margin: 0.75em 0;
@@ -2610,6 +2624,14 @@ This file is used to contain all layout imports.
 Files inside this folder should contain all styles relating
 to layouts.
 */
+.grid::after {
+  clear: both;
+  content: "";
+  display: block; }
+
+.page-header {
+  text-align: center; }
+
 footer {
   position: fixed;
   right: 0;
@@ -2619,7 +2641,92 @@ footer {
   background-color: #f7f7f7;
   text-align: center; }
 
-.grid::after {
-  clear: both;
-  content: "";
-  display: block; }
+nav {
+  background: rgba(204, 204, 204, 0.5);
+  padding-top: 10px; }
+  nav::after {
+    clear: both;
+    content: "";
+    display: block; }
+
+.nav-logo {
+  width: calc(25% - 25px);
+  float: left;
+  margin-left: 20px;
+  font-family: "Nothing You Could Do", cursive;
+  font-size: 45px;
+  font-weight: 300; }
+  .nav-logo a, .nav-logo a:visited, .nav-logo a:link, .nav-logo a:hover {
+    text-decoration: none;
+    color: white; }
+
+.nav-links {
+  width: calc(41.66667% - 28.33333px);
+  float: left;
+  margin-left: 20px;
+  margin-left: calc(33.33333% - 26.66667px + 40px); }
+  .nav-links .nav-link {
+    margin-right: 5px;
+    padding-right: 5px;
+    border-right: solid #000;
+    font-size: 22px; }
+    .nav-links .nav-link a, .nav-links .nav-link a:visited, .nav-links .nav-link a:link {
+      text-decoration: none;
+      color: white; }
+    .nav-links .nav-link a:hover {
+      color: blue; }
+  .nav-links .nav-link:last-child {
+    border: none; }
+
+.index-bg {
+  background: url(../img/bg_index.png) no-repeat center center fixed;
+  background-size: cover; }
+
+.index-container {
+  width: calc(50% - 30px);
+  float: left;
+  margin-left: 20px;
+  margin-left: calc(25% - 25px + 40px);
+  margin-top: 100px;
+  margin-bottom: 50px;
+  border-radius: 4px;
+  padding: 10px 10px;
+  background-color: #f7f7f7; }
+  .index-container::after {
+    clear: both;
+    content: "";
+    display: block; }
+  .index-container h1 {
+    color: green;
+    text-align: center; }
+  .index-container .bt-analyse {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center; }
+
+.result-bg {
+  background: url(../img/bg_index.png) no-repeat center center fixed;
+  background-size: cover; }
+
+.result-container {
+  width: calc(66.66667% - 33.33333px);
+  float: left;
+  margin-left: 20px;
+  margin-left: calc(16.66667% - 23.33333px + 40px);
+  margin-top: 50px;
+  margin-bottom: 100px;
+  border-radius: 4px;
+  padding: 10px 10px;
+  background-color: #f7f7f7;
+  text-align: center; }
+  .result-container::after {
+    clear: both;
+    content: "";
+    display: block; }
+  .result-container h1 {
+    color: green;
+    text-align: center; }
+  .result-container .bt-analyse {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center; }

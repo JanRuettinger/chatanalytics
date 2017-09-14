@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% block head %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.min.css') }}"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{% block title %}{% endblock %}</title>
+      {% endblock %}
+  </head>
+  {% if request.endpoint == "main.index" %}
+  <body class="index-bg">
+  {% elif request.endpoint == "auth.register" %}
+  <body class="upload_page-bg">
+  {% elif request.endpoint == "main.show_result" %}
+  <body class="result-bg">
+  {% else %}
+  <body>
+  {% endif %}
+    <div class="grid">
+      <header>
+          {% block header%}
+              {% from "partials/_navbar.html" import render_navbar %}
+              {{ render_navbar(current_user, form) }}
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="flash-{{category}}" id="alert">
+                        <span>{{ message }}</span>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+          <script>$('#alert').delay(3000).fadeOut(400)</script>
+          {% endblock %}
+      </header>
+      {% block content %}
+        {% block page_content %}
+
+        {% endblock %}
+      {% endblock %}
+      <footer>
+        {% block footer %}
+        &copy; Copyright 2017 by <a href="http://www.janruettinger.com/">Jan Ruettinger</a>
+        {% endblock %}
+      </footer>
+    </div>
+  {% block script %}
+  {% endblock %}
+  </body>
+</html>
+
