@@ -2679,7 +2679,7 @@ nav {
     border: none; }
 
 .index-bg {
-  background: url(../img/bg_index.png) no-repeat center center fixed;
+  background: url(../img/opt/bg_index.png) no-repeat center center fixed;
   background-size: cover; }
 
 .index-container {
