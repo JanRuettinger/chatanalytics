@@ -9,8 +9,8 @@
   </head>
   {% if request.endpoint == "main.index" %}
   <body class="index-bg">
-  {% elif request.endpoint == "auth.register" %}
-  <body class="upload_page-bg">
+  {% elif request.endpoint == "main.about" or request.endpoint == "main.privacy" or request.endpoint == "main.instructions"%}
+  <body class="index-bg">
   {% elif request.endpoint == "main.show_result" %}
   <body class="result-bg">
   {% else %}
