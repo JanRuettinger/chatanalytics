@@ -30,14 +30,17 @@ def downloaAttachmentsInEmail(m, emailid, outputdir):
     name, email_addr = sender.split('<')
     email_addr = email_addr.replace(">", "")
 
+    if mail.get_content_maintype() != 'multipart':
+        return -1
+
     # Each email address gets its own folder
     new_folder_name = "".join(email_addr.split("@")[0].split("."))
+
     outputdir = outputdir + new_folder_name + "/"
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
-    if mail.get_content_maintype() != 'multipart':
-        return -1
+
     for part in mail.walk():
         if part.get_content_maintype() != 'multipart' and part.get('Content-Disposition') is not None:
             old_filename = part.get_filename()
@@ -80,7 +83,9 @@ def downloadAllAttachmentsInInbox(server, user, password, outputdir):
     mails = mails[0].split()
     print("Number of new emails: " + str(len(mails)))
     for emailid in mails:
-        list_new_mails.append(downloaAttachmentsInEmail(m, emailid, outputdir))
+        new_attachement = downloaAttachmentsInEmail(m, emailid, outputdir)
+        if new_attachement != -1:
+            list_new_mails.append(new_attachement)
         # m.store(emailid, '+FLAGS', '\Seen') # Mark email as seen
     return list_new_mails
 

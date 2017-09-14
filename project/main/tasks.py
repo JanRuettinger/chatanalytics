@@ -8,6 +8,6 @@ celery.conf.update(current_app.config)
 
 @celery.task
 def my_background_task(arg1, arg2):
-    # Download new Emails
-    # Analyse Chats
+    # Check if new emails arrived
+    # Download and Analyse new emails
     return 1
