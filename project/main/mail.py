@@ -32,8 +32,14 @@ def downloaAttachmentsInEmail(m, emailid, outputdir):
 
     # Extract sender name and sender email address from the email
     sender = str(make_header(decode_header(mail['From'])))
-    name, email_addr = sender.split('<')
-    email_addr = email_addr.replace(">", "")
+
+    try:
+        name, email_addr = sender.split('<')
+        email_addr = email_addr.replace(">", "")
+    except:
+        print("Sender ohne Name")
+        email_addr = sender
+        name = " "
 
     if mail.get_content_maintype() != 'multipart':
         return -1
@@ -71,10 +77,14 @@ def downloaAttachmentsInEmail(m, emailid, outputdir):
             else:
                 # File is from iOS client
                 # New Filename: DD_MM_YY_OLDFILENAME.txt
-                new_filename = old_filename[:-3] + "txt"
-                unzip(outputdir + old_filename, outputdir)
-                os.rename(outputdir + '_chat.txt', outputdir + new_filename)
-                os.remove(outputdir + old_filename)  # remove zip file
+                try:
+                    new_filename = old_filename[:-3] + "txt"
+                    unzip(outputdir + old_filename, outputdir)
+                    os.rename(outputdir + '_chat.txt', outputdir + new_filename)
+                    os.remove(outputdir + old_filename)  # remove zip file
+
+                except:
+                    return -1
 
             return (new_folder_name, name, email_addr, outputdir + new_filename)
 
@@ -96,8 +106,8 @@ def downloadAllAttachmentsInInbox(server, user, password, outputdir):
 
 def check_new_mail():
     server = current_app.config['IMAP_SERVER']
-    user = current_app.config['FROM_EMAIL']
-    password = current_app.config['FROM_PWD']
+    user = current_app.config['MAIL_USERNAME']
+    password = current_app.config['MAIL_PASSWORD']
 
     m = connect(server, user, password)
 
@@ -114,8 +124,8 @@ def unzip(source_filename, dest_dir):
 
 def get_new_chats():
     IMAP_SERVER = current_app.config['IMAP_SERVER']
-    FROM_EMAIL = current_app.config['FROM_EMAIL']
-    FROM_PWD = current_app.config['FROM_PWD']
+    FROM_EMAIL = current_app.config['MAIL_USERNAME']
+    FROM_PWD = current_app.config['MAIL_PASSWORD']
     OUTPUTDIR = current_app.config['OUTPUTDIR']
 
     return downloadAllAttachmentsInInbox(IMAP_SERVER, FROM_EMAIL,
@@ -132,7 +142,7 @@ def send_email(to, subject, template, name, link_hash):
     result_url = app.config['RESULT_URL']
     link = str(result_url) + str(link_hash)
     msg = Message(subject,
-                  sender=app.config['MAIL_SENDER'], recipients=[to])
+                  sender=app.config['MAIL_USERNAME'], recipients=[to])
     #msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', name=name, link=link)
     mail.send(msg)

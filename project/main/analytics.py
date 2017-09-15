@@ -34,7 +34,7 @@ def analyse_new_chats():
             print("Error: Couldn't store analysis in database")
             break
         try:
-            mail.send_email("jan-hendrik.ruettinger@online.de", "Your Result is ready!", 'email/result', name=analysis.name, link_hash=analysis.link_hash)
+            mail.send_email(analysis.email, "Your Result is ready!", 'email/result', name=analysis.name, link_hash=analysis.link_hash)
         except:
             print("Unexpected error:", sys.exc_info()[0])
 
