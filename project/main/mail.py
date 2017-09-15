@@ -19,13 +19,14 @@ def connect(server, user, password):
         m.login(user, password)
     except:
         print("Unexpected error:", sys.exc_info()[0])
-    m.select('inbox')
+        raise
+    m.select('INBOX')
     return m
 
 
 # Download all attachment files for a given email
 def downloaAttachmentsInEmail(m, emailid, outputdir):
-    resp, data = m.fetch(emailid, "(UNSEEN)")
+    resp, data = m.fetch(emailid, '(RFC822)')
     email_body = data[0][1]
     mail = email.message_from_bytes(email_body)
 
@@ -75,7 +76,7 @@ def downloaAttachmentsInEmail(m, emailid, outputdir):
                 os.rename(outputdir + '_chat.txt', outputdir + new_filename)
                 os.remove(outputdir + old_filename)  # remove zip file
 
-    return (new_folder_name, name, email_addr, outputdir + new_filename)
+            return (new_folder_name, name, email_addr, outputdir + new_filename)
 
 
 # Download all the attachment files for all emails in the inbox.
@@ -83,7 +84,7 @@ def downloadAllAttachmentsInInbox(server, user, password, outputdir):
     list_new_mails = []
     m = connect(server, user, password)
     # resp, mails = m.search(None, "(UNSEEN)", '(SUBJECT "%s")' % ("Test"))
-    resp, mails = m.search(None, "(UNSEEN)")
+    resp, mails = m.search(None, "UNSEEN")
     mails = mails[0].split()
     print("Number of new emails: " + str(len(mails)))
     for emailid in mails:
