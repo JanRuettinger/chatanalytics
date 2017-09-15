@@ -101,7 +101,7 @@ def check_new_mail():
 
     m = connect(server, user, password)
 
-    resp, mails = m.search(None, "(UNSEEN)")
+    resp, mails = m.search(None, "UNSEEN")
     mails = mails[0].split()
     return len(mails)
 
