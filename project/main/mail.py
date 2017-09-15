@@ -127,12 +127,14 @@ def send_async_email(app, msg):
         mail.send(msg)
 
 
-def send_email(to, subject, template, **kwargs):
+def send_email(to, subject, template, name, link_hash):
     app = current_app._get_current_object()
+    result_url = app.config['RESULT_URL']
+    link = result_url + link_hash
     msg = Message(subject,
                   sender=app.config['MAIL_SENDER'], recipients=[to])
     #msg.body = render_template(template + '.txt', **kwargs)
-    msg.html = render_template(template + '.html', **kwargs)
+    msg.html = render_template(template + '.html', name, link)
     mail.send(msg)
     thr = Thread(target=send_async_email, args=[app, msg])
     thr.start()
