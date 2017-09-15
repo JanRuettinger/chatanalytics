@@ -1,7 +1,8 @@
 # coding: utf-8
 import pandas as pd
 import matplotlib.pyplot as plt
-plt.use('Agg')
+import matplotlib
+matplotlib.use('Agg')
 import re
 import datetime as dt
 import os
