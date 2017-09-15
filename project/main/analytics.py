@@ -9,7 +9,6 @@ import project.main.mail as mail
 
 def analyse_new_chats():
     new_chats = mail.get_new_chats()
-    print(len(new_chats))
     for chat in new_chats:
         filepath = chat[3]  # path to txt chat file
         print("Starte Anaylse...")

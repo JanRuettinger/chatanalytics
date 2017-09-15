@@ -1,13 +1,17 @@
-from celery import Celery
-from Flask import current_app
+from flask import current_app
+import project.main.analytics as analytics
+from project.factory import create_celery_app
+from celery.utils.log import get_task_logger
+logger = get_task_logger(__name__)
 
-current_app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
-celery = Celery(current_app.name, broker=current_app.config['CELERY_BROKER_URL'])
-celery.conf.update(current_app.config)
+celery = create_celery_app()
 
+@celery.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # Calls test('hello') every 10 seconds.
+    sender.add_periodic_task(120.0, test.s(), name='check emails every 120s')
 
 @celery.task
-def my_background_task(arg1, arg2):
-    # Check if new emails arrived
-    # Download and Analyse new emails
-    return 1
+def test():
+    print("Starte Task")
+    analytics.analyse_new_chats()
