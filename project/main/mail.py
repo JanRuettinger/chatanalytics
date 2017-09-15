@@ -50,8 +50,8 @@ def downloaAttachmentsInEmail(m, emailid, outputdir):
         if part.get_content_maintype() != 'multipart' and part.get('Content-Disposition') is not None:
             old_filename = part.get_filename()
             # Check if attachement contains "whatsapp chat"
-            if "whatsapp chat" not in old_filename.lower():
-                return -1
+            #if "whatsapp chat" not in old_filename.lower():
+            #    return -1
             # Write file/attachment to disk
             if part.get_filename() is not None:
                 sv_path = os.path.join(outputdir, old_filename)
