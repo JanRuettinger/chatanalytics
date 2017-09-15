@@ -130,7 +130,7 @@ def send_async_email(app, msg):
 def send_email(to, subject, template, name, link_hash):
     app = current_app._get_current_object()
     result_url = app.config['RESULT_URL']
-    link = result_url + link_hash
+    link = str(result_url) + str(link_hash)
     msg = Message(subject,
                   sender=app.config['MAIL_SENDER'], recipients=[to])
     #msg.body = render_template(template + '.txt', **kwargs)
