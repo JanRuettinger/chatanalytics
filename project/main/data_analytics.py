@@ -138,10 +138,8 @@ def calculate_total_numbers(dataframe):
     result = dict()
     df = dataframe
     result['total_number_messages'] = df['messages'].count()
-    try:
-        result['total_number_images'] = len(df[df['messages'].str.contains('image omitted')])
-    except:
-        result['total_number_images'] = len(df[df['messages'].str.contains('Bild weggelassen')])
+    result['total_number_images'] = max(len(df[df['messages'].str.contains('image omitted')]), len(df[df['messages'].str.contains('Bild weggelassen')]))
+
 
     result['total_number_days'] = (df['dates'].max() - df['dates'].min()).days
 
@@ -187,13 +185,14 @@ def calculate_averages(dataframe):
 def calculate_activity(dataframe):
     result = dict()
     df = dataframe
-
     result['activity_over_day'] = df.groupby(df['dates'].dt.hour)['messages'].count()
     result['activity_over_week'] = df.groupby(df['dates'].dt.dayofweek)['messages'].count()
     result['activity_over_year'] = df.groupby(df['dates'].dt.month)['messages'].count()
     result['activity_members_messages'] = df.groupby('sender')['messages'].count()
-    result['acitivity_members_images'] = df[df['messages'].str.contains('image omitted')].groupby('sender')['messages'].count()
-
+    if len(df[df['messages'].str.match('omitted')]) > 0:
+        result['acitivity_members_images'] = df[df['messages'].str.contains('<image omitted>', regex=True)].groupby('sender')['messages'].count()
+    else:
+        result['acitivity_members_images'] = df[df['messages'].str.contains('Bild\sweggelassen', regex=True)].groupby('sender')['messages'].count()
     return result
 
 # # Print activity stats
