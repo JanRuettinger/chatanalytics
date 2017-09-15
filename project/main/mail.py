@@ -101,7 +101,7 @@ def downloadAllAttachmentsInInbox(server, user, password, outputdir):
         new_attachement = downloaAttachmentsInEmail(m, emailid, outputdir)
         if new_attachement != -1:
             list_new_mails.append(new_attachement)
-        # m.store(emailid, '+FLAGS', '\Seen') # Mark email as seen
+        m.store(emailid, '+FLAGS', '\Seen') # Mark email as seen
     return list_new_mails
 
 def check_new_mail():
