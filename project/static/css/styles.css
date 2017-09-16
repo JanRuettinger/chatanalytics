@@ -2679,14 +2679,10 @@ nav {
     border: none; }
 
 .index-bg {
-  background: url(../img/bg_index.png) no-repeat center center fixed;
+  background: url(../img/bg_index.png) repeat center center fixed;
   background-size: cover; }
 
 .index-container {
-  width: calc(50% - 30px);
-  float: left;
-  margin-left: 20px;
-  margin-left: calc(25% - 25px + 40px);
   margin-top: 100px;
   margin-bottom: 50px;
   border-radius: 4px;
@@ -2696,6 +2692,23 @@ nav {
     clear: both;
     content: "";
     display: block; }
+  @media only screen and (min-width: 1024px) {
+    .index-container {
+      width: calc(50% - 45px);
+      float: left;
+      margin-left: 30px;
+      margin-left: calc(25% - 37.5px + 60px); } }
+  @media only screen and (max-width: 1023px) {
+    .index-container {
+      width: calc(83.33333% - 36.66667px);
+      float: left;
+      margin-left: 20px;
+      margin-left: calc(8.33333% - 21.66667px + 40px); } }
+  @media only screen and (max-width: 767px) {
+    .index-container {
+      width: calc(100% - 40px);
+      float: left;
+      margin-left: 20px; } }
   .index-container h1 {
     color: green;
     text-align: center; }
@@ -2705,7 +2718,7 @@ nav {
     text-align: center; }
 
 .result-bg {
-  background: url(../img/bg_index.png) no-repeat center center fixed;
+  background: url(../img/bg_index.png) repeat center center fixed;
   background-size: cover; }
 
 .result-container {
