@@ -2640,6 +2640,12 @@ footer {
   padding: 1rem;
   background-color: #f7f7f7;
   text-align: center; }
+  @media only screen and (min-width: 768px) {
+    footer {
+      padding: 1rem; } }
+  @media only screen and (max-width: 767px) {
+    footer {
+      padding: 0.5rem; } }
 
 nav {
   background: rgba(204, 204, 204, 0.5);
@@ -2650,41 +2656,59 @@ nav {
     display: block; }
 
 .nav-logo {
-  width: calc(25% - 25px);
-  float: left;
-  margin-left: 20px;
-  font-family: "Nothing You Could Do", cursive;
-  font-size: 45px;
-  font-weight: 300; }
+  font-family: "Nothing You Could Do", cursive; }
+  @media only screen and (min-width: 768px) {
+    .nav-logo {
+      font-size: 45px;
+      font-weight: 300;
+      width: calc(50% - 30px);
+      float: left;
+      margin-left: 20px; } }
+  @media only screen and (max-width: 767px) {
+    .nav-logo {
+      font-size: 40px;
+      font-weight: 300;
+      width: calc(100% - 40px);
+      float: left;
+      margin-left: 20px;
+      text-align: center; } }
   .nav-logo a, .nav-logo a:visited, .nav-logo a:link, .nav-logo a:hover {
     text-decoration: none;
     color: white; }
 
-.nav-links {
-  width: calc(41.66667% - 28.33333px);
-  float: left;
-  margin-left: 20px;
-  margin-left: calc(33.33333% - 26.66667px + 40px); }
-  .nav-links .nav-link {
-    margin-right: 5px;
-    padding-right: 5px;
-    border-right: solid #000;
-    font-size: 22px; }
-    .nav-links .nav-link a, .nav-links .nav-link a:visited, .nav-links .nav-link a:link {
-      text-decoration: none;
-      color: white; }
-    .nav-links .nav-link a:hover {
-      color: blue; }
-  .nav-links .nav-link:last-child {
-    border: none; }
+@media only screen and (min-width: 768px) {
+  .nav-links {
+    width: calc(41.66667% - 28.33333px);
+    float: left;
+    margin-left: 20px;
+    margin-left: calc(8.33333% - 21.66667px + 40px); } }
+
+@media only screen and (max-width: 767px) {
+  .nav-links {
+    display: none; } }
+
+.nav-links .nav-link {
+  margin-right: 5px;
+  padding-right: 5px;
+  border-right: solid #000;
+  font-size: 22px; }
+  @media only screen and (max-width: 1023px) {
+    .nav-links .nav-link {
+      font-size: 22px; } }
+  .nav-links .nav-link a, .nav-links .nav-link a:visited, .nav-links .nav-link a:link {
+    text-decoration: none;
+    color: white; }
+  .nav-links .nav-link a:hover {
+    color: blue; }
+
+.nav-links .nav-link:last-child {
+  border: none; }
 
 .index-bg {
   background: url(../img/bg_index.png) repeat center center fixed;
   background-size: cover; }
 
 .index-container {
-  margin-top: 100px;
-  margin-bottom: 50px;
   border-radius: 4px;
   padding: 10px 10px;
   background-color: #f7f7f7; }
@@ -2697,18 +2721,24 @@ nav {
       width: calc(50% - 45px);
       float: left;
       margin-left: 30px;
-      margin-left: calc(25% - 37.5px + 60px); } }
+      margin-left: calc(25% - 37.5px + 60px);
+      margin-top: 100px;
+      margin-bottom: 50px; } }
   @media only screen and (max-width: 1023px) {
     .index-container {
       width: calc(83.33333% - 36.66667px);
       float: left;
       margin-left: 20px;
-      margin-left: calc(8.33333% - 21.66667px + 40px); } }
+      margin-left: calc(8.33333% - 21.66667px + 40px);
+      margin-top: 50px;
+      margin-bottom: 20px; } }
   @media only screen and (max-width: 767px) {
     .index-container {
       width: calc(100% - 40px);
       float: left;
-      margin-left: 20px; } }
+      margin-left: 20px;
+      margin-top: 50px;
+      margin-bottom: 20px; } }
   .index-container h1 {
     color: green;
     text-align: center; }
@@ -2722,12 +2752,6 @@ nav {
   background-size: cover; }
 
 .result-container {
-  width: calc(66.66667% - 33.33333px);
-  float: left;
-  margin-left: 20px;
-  margin-left: calc(16.66667% - 23.33333px + 40px);
-  margin-top: 50px;
-  margin-bottom: 100px;
   border-radius: 4px;
   padding: 10px 10px;
   background-color: #f7f7f7;
@@ -2736,6 +2760,29 @@ nav {
     clear: both;
     content: "";
     display: block; }
+  @media only screen and (min-width: 1024px) {
+    .result-container {
+      width: calc(66.66667% - 50px);
+      float: left;
+      margin-left: 30px;
+      margin-left: calc(16.66667% - 35px + 60px);
+      margin-top: 100px;
+      margin-bottom: 50px; } }
+  @media only screen and (max-width: 1023px) {
+    .result-container {
+      width: calc(83.33333% - 36.66667px);
+      float: left;
+      margin-left: 20px;
+      margin-left: calc(8.33333% - 21.66667px + 40px);
+      margin-top: 100px;
+      margin-bottom: 50px; } }
+  @media only screen and (max-width: 767px) {
+    .result-container {
+      width: calc(100% - 40px);
+      float: left;
+      margin-left: 20px;
+      margin-top: 30px;
+      margin-bottom: 20px; } }
   .result-container h1 {
     color: green;
     text-align: center; }
