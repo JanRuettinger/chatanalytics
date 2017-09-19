@@ -192,7 +192,8 @@ def calculate_activity(dataframe):
     if len(df[df['messages'].str.match('omitted')]) > 0:
         result['acitivity_members_images'] = df[df['messages'].str.contains('<image omitted>', regex=True)].groupby('sender')['messages'].count()
     else:
-        result['acitivity_members_images'] = df[df['messages'].str.contains('Bild\sweggelassen', regex=True)].groupby('sender')['messages'].count()
+        result['acitivity_members_images'] =
+        df[df['messages'].str.contains('Bild weggelassen', regex=True)].groupby('sender')['messages'].count()
     return result
 
 # # Print activity stats
