@@ -20,7 +20,8 @@ def analyse_new_chats():
         if not os.path.exists(plot_path):
             os.makedirs(plot_path)
 
-        df = data_analytics.preprocess_data(filepath)
+        data_raw = data_analytics.open_data(filepath)
+        df = data_analytics.preprocess_data(data_raw)
         data_analytics.calculate_total_numbers(df)
         data_analytics.calculate_averages(df)
         data_analytics.make_plots(data_analytics.calculate_activity(df), plot_path)

@@ -1,7 +1,7 @@
 # development.py
 
 from project.factory import create_app
-app = create_app()
+app = create_app("production")  # development, test or production
 
 #import os
 #from app import create_app, db

@@ -1,0 +1,11 @@
+{
+  "total_number_messages": 112,
+  "total_number_images": 0,
+  "total_number_days": 65,
+  "total_number_words": 772,
+  "total_number_letters": 4299,
+
+  "mean_messages_per_day": 1.72307692308,
+  "mean_words_per_message": 6.89285714286,
+  "mean_letters_per_message": 38.3839285714
+}

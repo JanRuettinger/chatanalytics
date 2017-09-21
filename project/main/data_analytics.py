@@ -8,144 +8,194 @@ import datetime as dt
 import os
 
 
-def preprocess_data(filename):
-    # Open whatsapp chat backup
-    try:
-        with open(filename, 'r', encoding="utf-8") as f:
-            data_raw = f.read()
-    except:
-        return False
+def preprocess_data(data_raw):
 
-    # Check if chat is from Android or iOS client
-    if bool(re.search('\d+.\d+.\d+,\s\d+:\d+ -', data_raw)):
-        # Chat is from Android phone
+    os_format = check_os(data_raw)
 
-        # ANDROID Split text into messages
-        split = re.split('(\d+.\d+.\d+,\s\d+:\d+\s-\s)', data_raw)
-        del split[0]
-        data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
+    if os_format == "Android":
+        df = preprocess_android(data_raw)
 
-        # ANDROID Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
-        copied_list = list(data_date_message)
-        for e in copied_list:
-            if e.count(':') < 2:  # status messages have less than 2 colons
-                data_date_message.remove(e)
+    elif os_format == "iOS":
+        df = preprocess_ios(data_raw)
 
-        # ANDROID Split each message into a date, a sender and a message text
-        dates = []
-        senders = []
-        messages = []
-        for e in data_date_message:
-            date = re.findall('(^\d+.\d+.\d+,\s\d+:\d+)\s-', e)
-            dates.append(date[0])
-
-            sender = re.findall('^\d+.\d+.\d+,\s\d+:\d+\s-\s([^:]+):.*', e)
-            senders.append(sender[0])
-
-            message = re.findall('^\d+.\d+.\d+,\s\d+:\d+\s-\s[^:]+:\s(.*)', e)
-            messages.append(message[0])
-
-            # ANDROID Create pandas dataframe
-            df = pd.DataFrame({'sender': senders, 'dates': dates, 'messages': messages})
-
-            # ANDROID Convert dates from string to datetime format
-            df['dates'] = pd.to_datetime(df['dates'], format='%d.%m.%y, %H:%M')
     else:
-        # Chat is from iOS phone
-
-        # Check which date format is used:
-        # Option 1: 08.09.16, 09:57:35:
-        # Option 2: 8/23/13, 2:14:56 PM:
-
-        if bool(re.search('\d+.\d+.\d+,\s\d+:\d+:\d+:', data_raw)):
-            ###  Option 1:  ###
-            # Split text into messages
-            split = re.split('(\d+.\d+.\d+,\s\d+:\d+:\d+:\s)', data_raw)
-            del split[0]
-            #print(len(split)) # number of seperated messages
-            data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
-
-            # Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
-            copied_list = list(data_date_message)
-            for e in copied_list:
-                if e.count(':') < 4: #status messages have less than 4 colons
-                    data_date_message.remove(e)
-
-            # Split each message into a date, a sender and a message text
-            dates = []
-            senders = []
-            messages = []
-            for e in data_date_message:
-                date = re.findall('(^\d+.\d+.\d+,\s\d+:\d+:\d+):', e)
-                dates.append(date[0])
-
-                sender = re.findall('^\d+.\d+.\d+,\s\d+:\d+:\d+:\s([^:]+):.*', e)
-                senders.append(sender[0])
-
-                message = re.findall('.+:.+:.+:.+:\s(.*)', e)
-                messages.append(message[0])
-
-            # Create pandas dataframe
-            df = pd.DataFrame({'sender': senders, 'dates': dates, 'messages': messages})
-
-            # Convert dates from string to datetime format
-            df['dates'] = pd.to_datetime(df['dates'], format='%d.%m.%y, %H:%M:%S')
-
-        else:
-            ### Option 2: ###
-            # iOS Split text into messages
-            split = re.split('(\d+/\d+/\d+,\s\d+:\d+:\d+\sA?P?M:\s)', data_raw)
-            del split[0]
-            # print(len(split)) # number of seperated messages
-            data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
-
-            # iOs Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
-            copied_list = list(data_date_message)
-            for e in copied_list:
-                if e.count(':') < 4:   # status messages have less than 4 colons
-                    data_date_message.remove(e)
-
-            # iOS Split each message into a date, a sender and a message text
-            dates = []
-            senders = []
-            messages = []
-            for e in data_date_message:
-                date = re.findall('(^\d+/\d+/\d+.*\sA?P?M):', e)
-                dates.append(date[0])
-
-                sender = re.findall('[^:]*:[^:]*:[^:]*:\s([^:]+):.*', e)
-                senders.append(sender[0])
-
-                message = re.findall('.+:.+:.+:.+:\s(.*)', e)
-                messages.append(message[0])
-
-            # iOS Create pandas dataframe
-            df = pd.DataFrame({'sender': senders, 'dates': dates, 'messages': messages})
-
-            # Convert dates from string to datetime format
-            df['dates'] = pd.to_datetime(df['dates'], format='%m/%d/%y, %I:%M:%S %p')
+        print("Error")
 
     # Check if all lists have the same size
-    if len(dates) == len(senders) == len(messages):
+    if check_list_sizes(df):
         print("All lists have the same size!")
     else:
         print("Error: lists have different sizes")
 
     return df
 
+def open_data(filename):
+    # Open whatsapp chat backup
+    try:
+        with open(filename, 'r', encoding="utf-8") as f:
+            data_raw = f.read()
+            return data_raw
+    except:
+        return False
+
+
+def check_os(data_raw):
+    '''Check if chat is from Android or iOS client'''
+
+    # Check if data contains android format
+    if bool(re.search('\d+.\d+.\d+,\s\d+:\d+ -', data_raw)):
+        # Chat is from Android phone
+        return "Android"
+    else:
+        return "iOS"
+
+def preprocess_android(data_raw):
+    # ANDROID Split text into messages
+    split = re.split('(\d+.\d+.\d+,\s\d+:\d+\s-\s)', data_raw)
+    del split[0]
+    data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
+
+    # ANDROID Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
+    copied_list = list(data_date_message)
+    for e in copied_list:
+        if e.count(':') < 2:  # status messages have less than 2 colons
+            data_date_message.remove(e)
+
+    # ANDROID Split each message into a date, a sender and a message text
+    dates = []
+    senders = []
+    messages = []
+    for e in data_date_message:
+        date = re.findall('(^\d+.\d+.\d+,\s\d+:\d+)\s-', e)
+        dates.append(date[0])
+
+        sender = re.findall('^\d+.\d+.\d+,\s\d+:\d+\s-\s([^:]+):.*', e)
+        senders.append(sender[0])
+
+        message = re.findall('^\d+.\d+.\d+,\s\d+:\d+\s-\s[^:]+:\s(.*)', e)
+        messages.append(message[0])
+
+    # ANDROID Create pandas dataframe
+    df = pd.DataFrame({'sender': senders, 'date': dates, 'message': messages})
+
+    # ANDROID Convert dates from string to datetime format
+    df['date'] = pd.to_datetime(df['date'], format='%d.%m.%y, %H:%M')
+
+    return df
+
+def preprocess_ios(data_raw):
+    # Chat is from iOS phone
+
+    # Check which date format is used:
+    # Option 1: 08.09.16, 09:57:35:
+    # Option 2: 8/23/13, 2:14:56 PM:
+
+    if bool(re.search('\d+.\d+.\d+,\s\d+:\d+:\d+:', data_raw)):
+        ###  Option 1:  ###
+        # Split text into messages
+        split = re.split('(\d+.\d+.\d+,\s\d+:\d+:\d+:\s)', data_raw)
+        del split[0]
+        #print(len(split)) # number of seperated messages
+        data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
+
+        # Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
+        copied_list = list(data_date_message)
+        for e in copied_list:
+            if e.count(':') < 4: #status messages have less than 4 colons
+                data_date_message.remove(e)
+
+        # Split each message into a date, a sender and a message text
+        dates = []
+        senders = []
+        messages = []
+        for e in data_date_message:
+            date = re.findall('(^\d+.\d+.\d+,\s\d+:\d+:\d+):', e)
+            dates.append(date[0])
+
+            sender = re.findall('^\d+.\d+.\d+,\s\d+:\d+:\d+:\s([^:]+):.*', e)
+            senders.append(sender[0])
+
+            message = re.findall('.+:.+:.+:.+:\s(.*)', e)
+            messages.append(message[0])
+
+        # Create pandas dataframe
+        df = pd.DataFrame({'sender': senders, 'date': dates, 'message': messages})
+
+        # Convert dates from string to datetime format
+        df['date'] = pd.to_datetime(df['date'], format='%d.%m.%y, %H:%M:%S')
+
+    else:
+        ### Option 2: ###
+        # iOS Split text into messages
+        split = re.split('(\d+/\d+/\d+,\s\d+:\d+:\d+\sA?P?M:\s)', data_raw)
+        del split[0]
+        # print(len(split)) # number of seperated messages
+        data_date_message = [split[i]+split[i+1] for i in range(len(split)) if i % 2 == 0]
+
+        # iOs Delete all status messages like "Jan has left" or "Jan has changed his security code." except "<image omitted>"
+        copied_list = list(data_date_message)
+        for e in copied_list:
+            if e.count(':') < 4:   # status messages have less than 4 colons
+                data_date_message.remove(e)
+
+        # iOS Split each message into a date, a sender and a message text
+        dates = []
+        senders = []
+        messages = []
+        for e in data_date_message:
+            date = re.findall('(^\d+/\d+/\d+.*\sA?P?M):', e)
+            dates.append(date[0])
+
+            sender = re.findall('[^:]*:[^:]*:[^:]*:\s([^:]+):.*', e)
+            senders.append(sender[0])
+
+            message = re.findall('.+:.+:.+:.+:\s(.*)', e)
+            messages.append(message[0])
+
+        # iOS Create pandas dataframe
+        df = pd.DataFrame({'sender': senders, 'date': dates, 'message': messages})
+
+        # Convert dates from string to datetime format
+        df['date'] = pd.to_datetime(df['date'], format='%m/%d/%y, %I:%M:%S %p')
+
+        return df
+
+def check_list_sizes(df):
+    l_senders = df["sender"].count()
+    l_dates = df["date"].count()
+    l_messages = df["message"].count()
+
+    if l_senders == l_dates == l_messages:
+        return True
+    else:
+        return False
+
+def check_language(df):
+    en = len(df[df['message'].str.contains("image omitted")])
+    de = len(df[df['message'].str.contains("Bild weggelassen")])
+
+    if en > de:
+        return "english"
+    else:
+        return "german"
+
 # Calculate total numbers
 def calculate_total_numbers(dataframe):
     result = dict()
     df = dataframe
-    result['total_number_messages'] = df['messages'].count()
-    result['total_number_images'] = max(len(df[df['messages'].str.contains('image omitted')]), len(df[df['messages'].str.contains('Bild weggelassen')]))
+    result['total_number_messages'] = df['message'].count()
 
+    lng = check_language(df)
+    if lng == "english":
+        result['total_number_images'] = len(df[df['message'].str.contains('image omitted')])
+    elif lng == "german":
+        result['total_number_images'] = len(df[df['message'].str.contains('Bild weggelassen')])
 
-    result['total_number_days'] = (df['dates'].max() - df['dates'].min()).days
+    result['total_number_days'] = (df['date'].max() - df['date'].min()).days
 
     total_number_words = 0
     total_number_letters = 0
-    for e in df['messages']:
+    for e in df['message']:
         total_number_letters += len(e)
         total_number_words += len(re.findall("[a-zA-Z_]+", e))
     result['total_number_words'] = total_number_words
@@ -164,12 +214,12 @@ def calculate_averages(dataframe):
 
     total_number_words = 0
     total_number_letters = 0
-    for e in df['messages']:
+    for e in df['message']:
         total_number_letters += len(e)
         total_number_words += len(re.findall("[a-zA-Z_]+", e))
-    mean_words = total_number_words/df['messages'].count()
-    mean_messages = df['messages'].count()/int((df['dates'].max() - df['dates'].min()).days)
-    mean_letters = total_number_letters/df['messages'].count()
+    mean_words = total_number_words/df['message'].count()
+    mean_messages = df['message'].count()/int((df['date'].max() - df['date'].min()).days)
+    mean_letters = total_number_letters/df['message'].count()
 
     result['mean_messages_per_day'] = mean_messages
     result['mean_words_per_message'] = mean_words
@@ -185,14 +235,14 @@ def calculate_averages(dataframe):
 def calculate_activity(dataframe):
     result = dict()
     df = dataframe
-    result['activity_over_day'] = df.groupby(df['dates'].dt.hour)['messages'].count()
-    result['activity_over_week'] = df.groupby(df['dates'].dt.dayofweek)['messages'].count()
-    result['activity_over_year'] = df.groupby(df['dates'].dt.month)['messages'].count()
-    result['activity_members_messages'] = df.groupby('sender')['messages'].count()
-    if len(df[df['messages'].str.match('omitted')]) > 0:
-        result['acitivity_members_images'] = df[df['messages'].str.contains('<image omitted>', regex=True)].groupby('sender')['messages'].count()
+    result['activity_over_day'] = df.groupby(df['date'].dt.hour)['message'].count()
+    result['activity_over_week'] = df.groupby(df['date'].dt.dayofweek)['message'].count()
+    result['activity_over_year'] = df.groupby(df['date'].dt.month)['message'].count()
+    result['activity_members_messages'] = df.groupby('sender')['message'].count()
+    if len(df[df['message'].str.match('omitted')]) > 0:
+        result['acitivity_members_images'] = df[df['message'].str.contains('<image omitted>', regex=True)].groupby('sender')['message'].count()
     else:
-        result['acitivity_members_images'] = df[df['messages'].str.contains('Bild\sweggelassen', regex=True)].groupby('sender')['messages'].count()
+        result['acitivity_members_images'] = df[df['message'].str.contains('Bild\sweggelassen', regex=True)].groupby('sender')['message'].count()
     return result
 
 # # Print activity stats
