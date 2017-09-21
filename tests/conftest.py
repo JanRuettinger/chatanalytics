@@ -25,31 +25,31 @@ def testapp(app):
     return app.test_client()
 
 
-@pytest.yield_fixture(scope='session')
-def db(app):
-    _db.app = app
-    _db.create_all()
+# @pytest.yield_fixture(scope='session')
+# def db(app):
+#     _db.app = app
+#     _db.create_all()
 
-    yield _db
+#     yield _db
 
-    _db.drop_all()
+#     _db.drop_all()
 
 
-@pytest.fixture(scope='function', autouse=True)
-def session(db):
-    connection = db.engine.connect()
-    transaction = connection.begin()
+# @pytest.fixture(scope='function', autouse=True)
+# def session(db):
+#     connection = db.engine.connect()
+#     transaction = connection.begin()
 
-    options = dict(bind=connection, binds={})
-    session_ = db.create_scoped_session(options=options)
+#     options = dict(bind=connection, binds={})
+#     session_ = db.create_scoped_session(options=options)
 
-    db.session = session_
+#     db.session = session_
 
-    yield session_
+#     yield session_
 
-    transaction.rollback()
-    connection.close()
-    session_.remove()
+#     transaction.rollback()
+#     connection.close()
+#     session_.remove()
 
 
 @pytest.fixture
