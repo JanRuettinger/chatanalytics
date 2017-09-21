@@ -9,7 +9,7 @@ from distutils import dir_util
 
 @pytest.yield_fixture(scope='session')
 def app():
-    _app = create_app("test")
+    _app = create_app()
     with Postgresql() as postgresql:
         _app.config['SQLALCHEMY_DATABASE_URI'] = postgresql.url()
         ctx = _app.app_context()
