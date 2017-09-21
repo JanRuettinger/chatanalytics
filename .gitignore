@@ -22,6 +22,7 @@ package.json
 /ssh_keys
 *.txt
 !requirements.txt
+!/tests/*/*
 /tmp
 .cache/
 
