@@ -189,8 +189,13 @@ def calculate_activity(dataframe):
     result['activity_over_week'] = df.groupby(df['dates'].dt.dayofweek)['messages'].count()
     result['activity_over_year'] = df.groupby(df['dates'].dt.month)['messages'].count()
     result['activity_members_messages'] = df.groupby('sender')['messages'].count()
-    if len(df[df['messages'].str.match('omitted')]) > 0:
-        result['acitivity_members_images'] = df[df['messages'].str.contains('<image omitted>', regex=True)].groupby('sender')['messages'].count()
+
+    print("Hallo")
+    print(len(df['messages'].str.contains('image omitted', regex=True)))
+
+
+    if len(df['messages'].str.contains('image omitted', regex=True)) > 0:
+        result['acitivity_members_images'] = df[df['messages'].str.contains('image omitted', regex=True)].groupby('sender')['messages'].count()
     else:
         result['acitivity_members_images'] = df[df['messages'].str.contains('Bild weggelassen', regex=True)].groupby('sender')['messages'].count()
     return result
