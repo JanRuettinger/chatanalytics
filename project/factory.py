@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
 from celery import Celery
+import os
 
 db = SQLAlchemy()
 mail = Mail()
@@ -11,10 +12,10 @@ CELERY_TASK_LIST = [
     'project.main.tasks',
 ]
 
-def create_app(config_name=None):
+def create_app():
     # create app and load config
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile(config_name + '.cfg')
+    load_config(app)
 
     db.init_app(app)
     migrate = Migrate(app, db)
@@ -31,6 +32,28 @@ def create_app(config_name=None):
     app.register_blueprint(blog_blueprint, url_prefix='/blog')
 
     return app
+
+
+def load_config(app):
+    config = os.environ["FLASK_CONFIG"].lower()
+
+    if config == "test":
+        # load default_settings
+        app.config.from_object('project.default_settings')
+
+        app.config['SECRET_KEY'] = os.environ["SECRET_KEY"]
+        app.config['MAIL_SERVER'] = os.environ["MAIL_SERVER"]
+        app.config['IMAP_SERVER'] = os.environ["IMAP_SERVER"]
+        app.config['MAIL_USERNAME'] = os.environ["MAIL_USERNAME"]
+        app.config['MAIL_PASSWORD'] = os.environ["MAIL_PASSWORD"]
+        app.config['SECRET_KEY'] = os.environ["SECRET_KEY"]
+
+    if config == "development":
+        app.config.from_pyfile('development.cfg')
+
+    if config == "production":
+        app.config.from_pyfile('production.cfg')
+
 
 
 def create_celery_app(app=None):
