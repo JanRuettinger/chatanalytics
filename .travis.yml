@@ -4,3 +4,8 @@
     - nightly
   script:
     - pytest
+  before_script:
+   - psql -c 'create database chatanalytics;' -U postgres
+  test:
+    adapter: postgresql
+    database: travis_ci_test
