@@ -23,6 +23,7 @@ package.json
 *.txt
 !requirements.txt
 /tmp
+.cache/
 
 # plots
 project/static/img/*/*

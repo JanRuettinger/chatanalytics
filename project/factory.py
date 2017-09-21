@@ -14,7 +14,7 @@ CELERY_TASK_LIST = [
 def create_app(config_name=None):
     # create app and load config
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_pyfile('flask.cfg')
+    app.config.from_pyfile(config_name + '.cfg')
 
     db.init_app(app)
     migrate = Migrate(app, db)
