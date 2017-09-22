@@ -10,10 +10,12 @@ test:
   database: travis_ci_test
 before_install:
 - openssl aes-256-cbc -K $encrypted_d6053f4d926b_key -iv $encrypted_d6053f4d926b_iv
+  -in travis.enc -out travis -d
+- openssl aes-256-cbc -K $encrypted_d6053f4d926b_key -iv $encrypted_d6053f4d926b_iv
   -in travis.enc -out .travis/travis -d
 after_success:
-  - eval "$(ssh-agent -s)" #start the ssh agent
-  - chmod 600 .travis/travis # this key should have push access
-  - ssh-add .travis/travis
-  - git remote add deploy deployer@172.104.133.90:/home/deployer/production/travis.git
-  - git push deploy
+- eval "$(ssh-agent -s)"
+- chmod 600 .travis/travis
+- ssh-add .travis/travis
+- git remote add deploy deployer@172.104.133.90:/home/deployer/production/travis.git
+- git push deploy
