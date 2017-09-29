@@ -15,6 +15,7 @@ after_success:
 - eval "$(ssh-agent -s)"
 - chmod 600 travis
 - ssh-add travis
+- git checkout master
 - git remote add deploy deployer@172.104.133.90:/home/deployer/production/travis.git
 - git push deploy
 - echo 'did this!!'
