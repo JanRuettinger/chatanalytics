@@ -18,7 +18,6 @@ after_success:
 - git checkout master
 - git remote add deploy deployer@172.104.133.90:/home/deployer/production/travis.git
 - git push deploy
-- echo 'did this!!'
 addons:
  ssh_known_hosts:
  - 172.104.133.90 
