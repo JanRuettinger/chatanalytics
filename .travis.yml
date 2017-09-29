@@ -17,3 +17,4 @@ after_success:
 - ssh-add travis
 - git remote add deploy deployer@172.104.133.90:/home/deployer/production/travis.git
 - git push deploy
+- echo 'did this!!'
