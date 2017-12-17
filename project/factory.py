@@ -46,7 +46,6 @@ def load_config(app):
         app.config['IMAP_SERVER'] = os.environ["IMAP_SERVER"]
         app.config['MAIL_USERNAME'] = os.environ["MAIL_USERNAME"]
         app.config['MAIL_PASSWORD'] = os.environ["MAIL_PASSWORD"]
-        app.config['SECRET_KEY'] = os.environ["SECRET_KEY"]
 
     if config == "development":
         app.config.from_pyfile('development.cfg')
