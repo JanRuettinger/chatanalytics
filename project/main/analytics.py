@@ -27,6 +27,7 @@ def analyse_new_chats():
         data_analytics.make_plots(data_analytics.calculate_activity(df), plot_path)
         print("Analysis finished successfully!")
         print("Speichere Analyse in der Datenbank...")
+        os.remove(filepath)
         analysis = Analysis(email=chat[2], name=chat[1], path=plot_path)
         db.session.add(analysis)
         try:

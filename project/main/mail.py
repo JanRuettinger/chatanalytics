@@ -104,6 +104,7 @@ def downloadAllAttachmentsInInbox(server, user, password, outputdir):
         m.store(emailid, '+FLAGS', '\Seen') # Mark email as seen
     return list_new_mails
 
+
 def check_new_mail():
     server = current_app.config['IMAP_SERVER']
     user = current_app.config['MAIL_USERNAME']
@@ -114,7 +115,6 @@ def check_new_mail():
     resp, mails = m.search(None, "UNSEEN")
     mails = mails[0].split()
     return len(mails)
-
 
 
 def unzip(source_filename, dest_dir):
