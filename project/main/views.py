@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, session, request, redirect, flash, url_for
-import os
+from flask import Blueprint, render_template, current_app, request, redirect, flash, url_for
 from werkzeug.utils import secure_filename
 from ..models import Analysis
 import project.main.analytics as analytics
@@ -19,9 +18,9 @@ def allowed_file(filename):
 # routes
 
 
-
 @main_blueprint.route('/')
 def index():
+    current_app.logger.info("In main route")
     return render_template('main/index.html')
 
 @main_blueprint.route('/result/<link>')
@@ -46,6 +45,7 @@ def privacy():
 def analysis():
     analytics.analyse_new_chats()
     return render_template('main/about.html')
+
 
 @main_blueprint.route('/instructions')
 def instructions():
@@ -77,8 +77,3 @@ def instructions():
 #      <p><input type=file name=file>
 #         <input type=submit value=Upload>
 #    </form>'''
-
-
-
-
-

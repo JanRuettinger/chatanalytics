@@ -1,22 +1,21 @@
 # coding: utf-8
 import pandas as pd
+import re
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import re
-import datetime as dt
-import os
 
 
 def preprocess_data(data_raw):
-
     os_format = check_os(data_raw)
 
     if os_format == "Android":
         df = preprocess_android(data_raw)
+        print("Android preprocessing done")
 
     elif os_format == "iOS":
         df = preprocess_ios(data_raw)
+        print("iOS preprocessing done")
 
     else:
         print("Error")
@@ -123,7 +122,8 @@ def preprocess_ios(data_raw):
 
         # Convert dates from string to datetime format
         df['date'] = pd.to_datetime(df['date'], format='%d.%m.%y, %H:%M:%S')
-
+        print("Option 1: 08.09.16, 09:57:35:")
+        print(df)
     else:
         ### Option 2: ###
         # iOS Split text into messages
@@ -157,8 +157,10 @@ def preprocess_ios(data_raw):
 
         # Convert dates from string to datetime format
         df['date'] = pd.to_datetime(df['date'], format='%m/%d/%y, %I:%M:%S %p')
+        print("Option 2: 8/23/13, 2:14:56 PM: ")
+        print(df)
+    return df
 
-        return df
 
 def check_list_sizes(df):
     l_senders = df["sender"].count()
@@ -175,8 +177,10 @@ def check_language(df):
     de = len(df[df['message'].str.contains("Bild weggelassen")])
 
     if en > de:
+        print("langauge: en")
         return "english"
     else:
+        print("langauge: de")
         return "german"
 
 # Calculate total numbers
@@ -232,26 +236,24 @@ def calculate_averages(dataframe):
 #     print(key + ": " + str(value))
 
 # Calculate several activity stats
-def calculate_activity(dataframe):
+def calculate_activity(df):
     result = dict()
-    df = dataframe
 
     result['activity_over_day'] = df.groupby(df['date'].dt.hour)['message'].count()
     result['activity_over_week'] = df.groupby(df['date'].dt.dayofweek)['message'].count()
     result['activity_over_year'] = df.groupby(df['date'].dt.month)['message'].count()
     result['activity_members_messages'] = df.groupby('sender')['message'].count()
 
-    if len(df[df['message'].str.match('omitted')]) > 0:
-        result['acitivity_members_images'] = df[df['message'].str.contains('<image omitted>', regex=True)].groupby('sender')['message'].count()
+    if check_language(df) == 'english':
+        result['acitivity_members_images'] = df[df['message'].str.contains('image omitted', regex=True)].groupby('sender')['message'].count()
     else:
-        result['acitivity_members_images'] = df[df['message'].str.contains('Bild\sweggelassen', regex=True)].groupby('sender')['message'].count()
+        result['acitivity_members_images'] = df[df['message'].str.contains('Bild weggelassen', regex=True)].groupby('sender')['message'].count()
     print(result)
     return result
 
 # # Print activity stats
 # for key, value in activity().items():
 #    print(key + ": " + str(value))
-
 
 #activity_result = activity()
 
@@ -327,9 +329,4 @@ def make_plots(results, path):
     #plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, radius=1.0)
     plt.tight_layout()
     fig5.savefig(path + '/plot5', bbox_extra_artists=(lgd,), bbox_inches='tight')
-
-
-
-
-
 

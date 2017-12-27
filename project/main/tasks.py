@@ -9,9 +9,10 @@ celery = create_celery_app()
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Calls test('hello') every 10 seconds.
-    sender.add_periodic_task(120.0, test.s(), name='check emails every 120s')
+    sender.add_periodic_task(120.0, process_mails.s(), name='check emails every 120s')
+
 
 @celery.task
-def test():
-    print("Starte Task")
+def process_mails():
+    current_app.logger.info("In celery task")
     analytics.analyse_new_chats()
